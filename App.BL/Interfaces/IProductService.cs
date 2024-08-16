@@ -5,9 +5,9 @@ namespace App.BL.Interfaces
 {
     public interface IProductService
     {
-        public ProductDTO GetProductById(Guid id);
-        public List<ProductDTO> GetProducts();
-        public Guid CreateProduct(ProductDTO product);
+        public Task<ProductDTO> GetProductById(Guid id);
+        public Task<List<ProductDTO>> GetProducts();
+        public Task<Guid> CreateProduct(ProductDTO product);
 
     }
 }

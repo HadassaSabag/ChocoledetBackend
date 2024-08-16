@@ -5,9 +5,9 @@ namespace App.DAL.Interfaces
 {
     public interface IProductsRepository
     {
-        public Product GetProductById(Guid id);
-        public List<Product> GetProducts();
-        public Guid CreateProduct(Product product);
+        public Task<Product> GetProductById(Guid id);
+        public Task<List<Product>> GetProducts();
+        public Task<Guid> CreateProduct(Product product);
 
     }
 }

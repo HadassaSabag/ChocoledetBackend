@@ -14,9 +14,16 @@ namespace App.Api.Controllers
             _orderItemService = ordersItemsService;
         }
         [HttpGet("{id}")]
-        public List<OrderItemDTO> GetOrderItemsById(Guid id)
+        public async Task<List<OrderItemDTO>> GetOrderItemsById(Guid id)
         {
-            return _orderItemService.GetOrderItemsById(id);
+            try
+            {
+                return await _orderItemService.GetOrderItemsById(id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

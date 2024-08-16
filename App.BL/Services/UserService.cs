@@ -14,29 +14,74 @@ namespace App.BL.Services
         {
             users = usersRepository;
         }
-        public List<UserDTO> GetAllUsers()
+        public async Task<List<UserDTO>> GetAllUsers()
         {
-            List<User> usersList = users.GetAllUsers();
-            return usersList.Select(u=>UserMapper.Map(u)).ToList();
+            try
+            {
+            List<User> usersList =await users.GetAllUsers();
+            return  usersList.Select(u=>UserMapper.Map(u)).ToList();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+           
         }
-        public UserDTO GetUserById(Guid id)
+        public async Task<UserDTO> GetUserById(Guid id)
         {
-            return UserMapper.Map(users.GetUserById(id));
+            try
+            {
+            var user = await users.GetUserById(id); 
+            return UserMapper.Map(user); 
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            
         }
 
-        public Guid CreateUser(UserDTO user)
+        public async Task<Guid> CreateUser(UserDTO user)
         {
-            return users.CreateUser(UserMapper.Map(user));
+            try
+            {
+            return await users.CreateUser(UserMapper.Map(user));
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
-        public Guid UpdateUser(Guid id, UserDTO user)
+        public async Task<Guid> UpdateUser(Guid id, UserDTO user)
         {
-            return users.UpdateUser(id, UserMapper.Map(user));
+            try
+            {
+            return await users.UpdateUser(id, UserMapper.Map(user));
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
-        public List<UserDTO> DeleteUser(Guid id)
+        public async Task<List<UserDTO>> DeleteUser(Guid id)
         {
-            List <User> newUserList = users.DeleteUser(id);
+            try
+            {
+                var newUserList = await users.DeleteUser(id);
+                var userDTOList = newUserList.Select(u => UserMapper.Map(u)).ToList();
+                return userDTOList;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
             
-            return newUserList.Select(u => UserMapper.Map(u)).ToList();
         }
     }
 }

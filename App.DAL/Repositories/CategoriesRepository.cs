@@ -1,6 +1,7 @@
 ﻿using App.DAL.DataContext;
 using App.DAL.Entities;
 using App.DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace App.DAL.Repositories
@@ -12,9 +13,16 @@ namespace App.DAL.Repositories
         {
             dbContext = chocoledetContext;
         }
-        public Category GetCategoryById(int id)
+        public async Task<Category> GetCategoryById(int id)
         {
-            return dbContext.Categories.SingleOrDefault(u => u.CategoryId == id);
+            try
+            {
+            return await dbContext.Categories.SingleOrDefaultAsync(u => u.CategoryId == id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

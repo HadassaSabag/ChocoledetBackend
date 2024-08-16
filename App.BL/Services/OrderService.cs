@@ -15,14 +15,29 @@ namespace App.BL.Services
         {
             orders = ordersRepository;
         }
-        public List<OrderDTO> GetOrdersById(Guid id)
+        public async Task<List<OrderDTO>> GetOrdersById(Guid id)
         {
-            List<Order> orderList = orders.GetOrdersById(id);
+            try
+            {
+            List<Order> orderList = await orders.GetOrdersById(id);
             return orderList.Select(u => OrderMapper.Map(u)).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
         }
-        public Guid CreateOrder(OrderDTO order)
+        public async Task<Guid> CreateOrder(OrderDTO order)
         {
-            return orders.CreateOrder(OrderMapper.Map(order));
+            try
+            {
+            return await orders.CreateOrder(OrderMapper.Map(order));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

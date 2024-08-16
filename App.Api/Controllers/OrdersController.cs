@@ -16,15 +16,29 @@ namespace App.Api.Controllers
         }
         [HttpGet("{id}")]
 
-        public List<OrderDTO> GetOrdersById(Guid id)
+        public async Task<List<OrderDTO>> GetOrdersById(Guid id)
         {
-            return _orderService.GetOrdersById(id);
+            try
+            {
+            return await _orderService.GetOrdersById(id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         [HttpPost]
-        public Guid CreateOrder(OrderRequest order)
+        public async Task<Guid> CreateOrder(OrderRequest order)
         {
-            return _orderService.CreateOrder(OrderMapper.Map(order));
+            try
+            {
+            return await _orderService.CreateOrder(OrderMapper.Map(order));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
     }

@@ -14,9 +14,17 @@ namespace App.Api.Controllers
             _categoryService = categoriesService;
         }
         [HttpGet("{id}")]
-        public CategoryDTO GetCategoryById(int id)
+        public async Task<CategoryDTO> GetCategoryById(int id)
         {
-            return _categoryService.GetCategoryById(id);
+            try
+            {
+            return await _categoryService.GetCategoryById(id);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

@@ -13,18 +13,34 @@ namespace App.DAL.Repositories
         {
             dbContext = chocoledetContext;
         }
-        public List<Order> GetOrdersById(Guid id)
+        public async Task<List<Order>> GetOrdersById(Guid id)
         {
-            List<Order> orders = dbContext.Orders.Where(u => u.UserId == id).Include(o => o.OrderItems).ToList();
-            return orders;
+            try
+            {
+            List<Order> orders = await dbContext.Orders.Where(u => u.UserId == id).Include(o => o.OrderItems).ToListAsync();
+            return  orders;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
         }
-        public Guid CreateOrder(Order order)
+        public async Task<Guid> CreateOrder(Order order)
         {
-            dbContext.Orders.Add(order);
+            try
+            {
+            await dbContext.Orders.AddAsync(order);
             foreach (var item in order.OrderItems)
-              dbContext.OrderItems.Add(item);
-            dbContext.SaveChanges();
+            await dbContext.OrderItems.AddAsync(item);
+            await dbContext.SaveChangesAsync();
             return order.OrderId;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
         }
 
     }

@@ -14,10 +14,18 @@ namespace App.BL.Services
         {
             ordersItem = ordersItemsRepository;
         }
-        public List<OrderItemDTO> GetOrderItemsById(Guid id)
+        public async Task<List<OrderItemDTO>> GetOrderItemsById(Guid id)
         {
-            List <OrderItem> orderItemList= ordersItem.GetOrderItemsById(id);
+            try
+            {
+            List <OrderItem> orderItemList=await ordersItem.GetOrderItemsById(id);
             return orderItemList.Select(u => OrderItemMapper.Map(u)).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
         }
     }
 }

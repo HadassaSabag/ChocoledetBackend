@@ -5,7 +5,7 @@ namespace App.BL.Interfaces
 {
     public interface ICategoryService
     {
-        public CategoryDTO GetCategoryById(int id);
+        public Task<CategoryDTO> GetCategoryById(int id);
 
     }
 }

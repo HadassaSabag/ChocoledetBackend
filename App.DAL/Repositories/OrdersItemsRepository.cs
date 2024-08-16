@@ -1,6 +1,7 @@
 ﻿using App.DAL.DataContext;
 using App.DAL.Entities;
 using App.DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace App.DAL.Repositories
@@ -12,10 +13,18 @@ namespace App.DAL.Repositories
         {
             dbContext = chocoledetContext;
         }
-        public List<OrderItem> GetOrderItemsById(Guid id)
+        public async Task<List<OrderItem>> GetOrderItemsById(Guid id)
         {
-            List<OrderItem> orderItems = dbContext.OrderItems.Where(u => u.OrderId == id).ToList();
+            try
+            {
+            List<OrderItem> orderItems =await dbContext.OrderItems.Where(u => u.OrderId == id).ToListAsync();
             return orderItems;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
         }
     }
 }

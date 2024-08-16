@@ -5,8 +5,8 @@ namespace App.BL.Interfaces
 {
     public interface IOrderService
     {
-        public List<OrderDTO> GetOrdersById(Guid id);
-        public Guid CreateOrder(OrderDTO order);
+        public Task<List<OrderDTO>> GetOrdersById(Guid id);
+        public Task<Guid> CreateOrder(OrderDTO order);
 
     }
 }

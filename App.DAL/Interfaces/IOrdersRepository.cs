@@ -5,7 +5,7 @@ namespace App.DAL.Interfaces
 {
     public interface IOrdersRepository
     {
-        public List<Order> GetOrdersById(Guid id);
-        public Guid CreateOrder(Order order);
+        public Task<List<Order>> GetOrdersById(Guid id);
+        public Task<Guid> CreateOrder(Order order);
     }
 }

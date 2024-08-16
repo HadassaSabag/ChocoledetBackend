@@ -1,6 +1,7 @@
 ﻿using App.Api.Mappers;
 using App.Api.Models;
 using App.BL.Interfaces;
+using App.DAL.Entities;
 using App.DTO.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,30 +17,74 @@ namespace App.Api.Controllers
             _userService= usersService;
         }
         [HttpGet]
-        public List<UserDTO> GetAllUsers()
+        public async Task<List<UserDTO>> GetAllUsers()
         {
-            return _userService.GetAllUsers();
+            try
+            {
+            return await _userService.GetAllUsers();
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         [HttpGet("{id}")]
-        public UserDTO GetUserById(Guid id)
+        public async Task<UserDTO> GetUserById(Guid id)
         {
-            return _userService.GetUserById(id);
+            try
+            {
+                return await _userService.GetUserById(id);
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
         [HttpPost]
-        public Guid CreateUser(UserRequest user)
+        public async Task<Guid> CreateUser([FromBody] UserRequest user)
         {
-            return _userService.CreateUser(UserMapper.Map(user));
+            try
+            {           
+                return await _userService.CreateUser(UserMapper.Map(user));
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
         [HttpPut]
-        public Guid UpdateUser(Guid id, UserRequest user)
+        public async Task<Guid> UpdateUser( Guid id,[FromBody] UserRequest user)
         {
-            return _userService.UpdateUser(id, UserMapper.Map(user));
+            try
+            {
+            return await _userService.UpdateUser(id, UserMapper.Map(user));
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
-        [HttpDelete]
-        public List<UserDTO> DeleteUser(Guid id)
+        [HttpDelete("{id}")]
+        public async Task<List<UserDTO>> DeleteUser(Guid id)
         {
-            return _userService.DeleteUser(id);
+            try
+            {
+            return await _userService.DeleteUser(id);
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
     }

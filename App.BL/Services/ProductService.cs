@@ -14,19 +14,40 @@ namespace App.BL.Services
         {
             products = productsRepository;
         }
-        public ProductDTO GetProductById(Guid id)
+        public async Task<ProductDTO> GetProductById(Guid id)
         {
-            return ProductMapper.Map(products.GetProductById(id));
+            try
+            {
+            var product = await products.GetProductById(id);
+            return  ProductMapper.Map(product);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
-        public List<ProductDTO> GetProducts()
+        public async Task<List<ProductDTO>> GetProducts()
         {
-            List<Product> productList = products.GetProducts();
-
+            try
+            {
+            List<Product> productList = await products.GetProducts();
             return productList.Select(u => ProductMapper.Map(u)).ToList();  
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }  
         }
-        public Guid CreateProduct(ProductDTO product)
+        public async Task<Guid> CreateProduct(ProductDTO product)
         {
-            return products.CreateProduct(ProductMapper.Map(product));
+            try
+            {
+            return await products.CreateProduct(ProductMapper.Map(product));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

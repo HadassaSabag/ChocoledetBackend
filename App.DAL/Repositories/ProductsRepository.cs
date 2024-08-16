@@ -1,6 +1,7 @@
 ﻿using App.DAL.DataContext;
 using App.DAL.Entities;
 using App.DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace App.DAL.Repositories
@@ -12,19 +13,40 @@ namespace App.DAL.Repositories
         {
             dbContext = chocoledetContext;
         }
-        public Product GetProductById(Guid id)
+        public async Task<Product> GetProductById(Guid id)
         {
-            return dbContext.Products.SingleOrDefault(u => u.ProductId == id);
+            try
+            {
+            return await dbContext.Products.SingleOrDefaultAsync(u => u.ProductId == id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
-        public List<Product> GetProducts()
+        public async Task<List<Product>> GetProducts()
         {
-            return dbContext.Products.ToList();
+            try
+            {
+            return await dbContext.Products.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
-        public Guid CreateProduct(Product product)
+        public async Task<Guid> CreateProduct(Product product)
         {
-            dbContext.Products.Add(product);
-            dbContext.SaveChanges();
+            try
+            {
+            await dbContext.Products.AddAsync(product);
+            await dbContext.SaveChangesAsync();
             return (Guid)product.ProductId;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            } 
         }
     }
 }

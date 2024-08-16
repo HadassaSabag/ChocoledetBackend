@@ -16,19 +16,41 @@ namespace App.Api.Controllers
             _productService = productsService;
         }
         [HttpGet("{id}")]
-        public ProductDTO GetProductById(Guid id)
+        public async Task<ProductDTO> GetProductById(Guid id)
         {
-            return _productService.GetProductById(id);
+            try
+            {
+            return await _productService.GetProductById(id);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         [HttpGet]
-        public List<ProductDTO> GetProducts()
+        public async Task<List<ProductDTO>> GetProducts()
         {
-            return _productService.GetProducts();
+            try
+            {
+            return await _productService.GetProducts();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         [HttpPost]
-        public Guid CreateProduct(ProductRequest product)
+        public async Task<Guid> CreateProduct(ProductRequest product)
         {
-            return _productService.CreateProduct(ProductMapper.Map(product));
+            try
+            {
+            return await _productService.CreateProduct(ProductMapper.Map(product));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

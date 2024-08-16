@@ -5,6 +5,6 @@ namespace App.DAL.Interfaces
 {
     public interface ICategoriesRepository
     {
-        public Category GetCategoryById(int id);
+        public Task<Category> GetCategoryById(int id);
     }
 }

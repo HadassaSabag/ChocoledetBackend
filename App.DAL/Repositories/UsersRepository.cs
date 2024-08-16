@@ -1,6 +1,7 @@
 ﻿using App.DAL.DataContext;
 using App.DAL.Entities;
 using App.DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace App.DAL.Repositories
@@ -12,36 +13,79 @@ namespace App.DAL.Repositories
         {
             dbContext = chocoledetContext;
         }       
-        public List<User> GetAllUsers()
+        public async Task<List<User>> GetAllUsers()
         {
-            return dbContext.Users.ToList();
+            try
+            {
+                return await dbContext.Users.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("שגיאה בשליפת נתונים");
+            }
         }
-        public User GetUserById(Guid id)
+        public async Task<User> GetUserById(Guid id)
         {
-            return dbContext.Users.SingleOrDefault(u => u.UserId == id);
+            try
+            {
+            return await dbContext.Users.SingleOrDefaultAsync(u => u.UserId == id);
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
 
-        public Guid CreateUser(User user)
+        public async Task<Guid> CreateUser(User user)
         {
-            dbContext.Users.Add(user);
-            dbContext.SaveChanges();
+            try
+            {
+            await dbContext.Users.AddAsync(user);
+            await dbContext.SaveChangesAsync();
             return (Guid)user.UserId;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+           
         }
 
-        public Guid UpdateUser(Guid id, User user)
+        public async Task<Guid> UpdateUser(Guid id, User user)
         {
-            User userToUpdate = dbContext.Users.SingleOrDefault(u => u.UserId == id);
+            try
+            {
+            User userToUpdate = await dbContext.Users.SingleOrDefaultAsync(u => u.UserId == id);
             userToUpdate.UserName = user.UserName;
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
             return (Guid)user.UserId;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+           
         }
-        public List<User> DeleteUser(Guid id)
+        public async Task<List<User>> DeleteUser(Guid id)
         {
-            User userToDelete = dbContext.Users.SingleOrDefault(u => u.UserId == id);
+            try
+            {
+            User userToDelete = await dbContext.Users.SingleOrDefaultAsync(u => u.UserId == id);
             dbContext.Users.Remove(userToDelete);
-            dbContext.SaveChanges() ;
-            return dbContext.Users.ToList();
+            await dbContext.SaveChangesAsync() ;
+            return await dbContext.Users.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+           
         }
     }
 }
