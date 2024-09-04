@@ -1,4 +1,5 @@
 ﻿using App.Api.Models;
+using App.DAL.Entities;
 using App.DTO.Models;
 
 namespace App.Api.Mappers
@@ -14,6 +15,8 @@ namespace App.Api.Mappers
                 Email = userRequest.Email,
                 Password = userRequest.Password,
                 CreatedAt = DateTime.Now,
+                IsDeleted = userRequest.IsDeleted,
+                Phone = userRequest.Phone,
             };
         }
     }

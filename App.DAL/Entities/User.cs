@@ -14,5 +14,9 @@ public partial class User
 
     public DateTime CreatedAt { get; set; }
 
+    public bool IsDeleted { get; set; }
+
+    public string? Phone { get; set; }
+
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

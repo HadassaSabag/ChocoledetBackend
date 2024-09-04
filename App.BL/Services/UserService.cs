@@ -83,5 +83,16 @@ namespace App.BL.Services
             }
             
         }
+        public async Task<string> LoginUser(string email, string password)
+        {
+            try
+            {
+                return await users.LoginUser(email, password);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

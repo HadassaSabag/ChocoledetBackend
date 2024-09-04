@@ -4,6 +4,8 @@ public class OrderRequest
 {
     public Guid UserId { get; set; }
     public bool PaymentStatus { get; set; }
+    public double TotalAmount { get; set; }
+
     public virtual ICollection<OrderItemRequest> OrderItems { get; set; } = new List<OrderItemRequest>();
 
 }

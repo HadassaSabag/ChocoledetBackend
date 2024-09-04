@@ -10,6 +10,8 @@ namespace App.DAL.Interfaces
         public Task<Guid> CreateUser(User user);
         public Task<Guid> UpdateUser(Guid id, User user);
         public Task<List<User>> DeleteUser(Guid id);
+        public Task<string> LoginUser(string email, string password);
+
 
     }
 }

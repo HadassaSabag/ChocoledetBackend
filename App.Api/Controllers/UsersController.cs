@@ -58,17 +58,15 @@ namespace App.Api.Controllers
                 throw ex;
             }
         }
-        [HttpPut]
-        public async Task<Guid> UpdateUser( Guid id,[FromBody] UserRequest user)
+        [HttpPut("{id}")]
+        public async Task<Guid> UpdateUser(Guid id, [FromBody] UserRequest user)
         {
             try
             {
-            return await _userService.UpdateUser(id, UserMapper.Map(user));
-
+                return await _userService.UpdateUser(id, UserMapper.Map(user));
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
@@ -83,6 +81,18 @@ namespace App.Api.Controllers
             catch (Exception ex)
             {
 
+                throw ex;
+            }
+        }
+        [HttpPost("login")]
+        public async Task<string> LoginUser(string email, string password)
+        {
+            try
+            {
+                return await _userService.LoginUser(email, password);
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
         }

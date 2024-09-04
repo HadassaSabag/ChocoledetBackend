@@ -13,6 +13,7 @@ namespace App.Api.Mappers
                 OrderId = newOrderId,
                 UserId = order.UserId,
                 OrderDate = DateTime.Now,
+                TotalAmount = order.TotalAmount,
                 PaymentStatus = order.PaymentStatus,
                 OrderItems = order.OrderItems.Select(item => new OrderItemDTO
                 {

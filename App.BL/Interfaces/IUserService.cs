@@ -11,6 +11,8 @@ namespace App.BL.Interfaces
         public Task<Guid> CreateUser(UserDTO user);
         public Task<Guid> UpdateUser(Guid id, UserDTO user);
         public Task<List<UserDTO>> DeleteUser(Guid id);
+        public Task<string> LoginUser(string email, string password);
+
 
     }
 }

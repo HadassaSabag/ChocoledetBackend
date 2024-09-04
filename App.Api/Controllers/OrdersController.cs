@@ -16,11 +16,11 @@ namespace App.Api.Controllers
         }
         [HttpGet("{id}")]
 
-        public async Task<List<OrderDTO>> GetOrdersById(Guid id)
+        public async Task<List<OrderDTO>> GetOrdersByUserId(Guid id)
         {
             try
             {
-            return await _orderService.GetOrdersById(id);
+            return await _orderService.GetOrdersByUserId(id);
             }
             catch (Exception ex)
             {
