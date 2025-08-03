@@ -11,11 +11,11 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers(); // Enables API controllers
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// *** CORS Configuration - Removed default policy and added specific one ***
+// *** CORS Configuration - Only the specific policy is defined and used ***
 builder.Services.AddCors(options =>
 {
     // Define a specific CORS policy for the Netlify frontend
@@ -76,6 +76,6 @@ app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllers(); // Maps controller routes (e.g., /api/users, /api/products)
 
 app.Run();

@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="App.Api.http" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationDefinition Include="App.Api.http" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
