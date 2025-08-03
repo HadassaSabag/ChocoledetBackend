@@ -1,9 +1,11 @@
+using App.BL.Interfaces; // Added for service interfaces
+using App.BL.Services;   // Added for service implementations
 using App.DAL.DataContext;
-using App.DAL.Interfaces;
+using App.DAL.Interfaces; // Added for repository interfaces
 using App.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-// הגדרת שם למדיניות ה-CORS שלנו
+// Define the name for our CORS policy
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,32 +15,47 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// *** הגדרת מדיניות CORS כאן - הסרנו את מדיניות ברירת המחדל ***
+// *** CORS Configuration - Removed default policy and added specific one ***
 builder.Services.AddCors(options =>
 {
-    // הגדרת מדיניות CORS ספציפית עבור הפרונט-אנד ב-Netlify
-    // זהו המקור היחיד המותר לגישה עם Credentials
+    // Define a specific CORS policy for the Netlify frontend
+    // This is the only origin allowed to access with credentials
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("https://chocoledet.netlify.app") // <-- חשוב מאוד: זהו הדומיין הספציפי של הפרונט-אנד שלך ב-Netlify
+                          policy.WithOrigins("https://chocoledet.netlify.app") // <-- IMPORTANT: This is the exact domain of your Netlify frontend
                                 .AllowAnyHeader()
                                 .AllowAnyMethod()
-                                .AllowCredentials(); // הוספנו AllowCredentials כדי לאפשר שליחת קוקיז/האדרים של אוטוריזציה
+                                .AllowCredentials(); // Allow cookies/authorization headers
                       });
 });
-// *** סוף הגדרת CORS ***
+// *** End CORS Configuration ***
 
 builder.Services.AddDbContext<ChocoledetContext>(options =>
 {
-    // וודאי שחיבור למסד הנתונים מגיע ממשתני סביבה ב-Render ולא רק מ-appsettings.json
-    // Render מגדירה את החיבור למסד נתונים כמשתנה סביבה בשם DATABASE_URL
+    // Ensure the database connection string comes from environment variables on Render
+    // Render typically defines the database connection as an environment variable named DATABASE_URL
     options.UseSqlServer(builder.Configuration.GetConnectionString("sql"));
 });
+
+// *** Dependency Injection Registrations for Repositories and Services ***
+// Register Repositories
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
 builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
 builder.Services.AddScoped<IOrdersItemsRepository, OrdersItemsRepository>();
+// Assuming you also have a ProductsRepository based on your frontend fetching products
+builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
+
+// Register Services (based on common patterns and your previous error for IUsersService)
+// This ensures that your controllers can receive instances of these services
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IOrderItemService, OrderItemService>();
+// Assuming you also have a ProductService
+builder.Services.AddScoped<IProductService, ProductService>();
+// *** End Dependency Injection Registrations ***
 
 
 var app = builder.Build();
@@ -52,10 +69,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// *** הפעלת מדיניות ה-CORS הספציפית שלנו (עם השם) ***
-// חשוב שזה יהיה לפני UseAuthorization() ו-MapControllers()
+// *** Activate our specific CORS policy (by name) ***
+// IMPORTANT: This must be placed before app.UseAuthorization() and app.MapControllers()
 app.UseCors(MyAllowSpecificOrigins);
-// *** סוף הפעלת CORS ***
+// *** End CORS Activation ***
 
 app.UseAuthorization();
 
