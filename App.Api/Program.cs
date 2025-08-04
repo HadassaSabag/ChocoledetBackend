@@ -1,69 +1,55 @@
-using App.BL.Interfaces; // Added for service interfaces
-using App.BL.Services;    // Added for service implementations
+ן»¿using App.BL.Interfaces;
+using App.BL.Services;
 using App.DAL.DataContext;
-using App.DAL.Interfaces; // Added for repository interfaces
+using App.DAL.Interfaces;
 using App.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 
-
 // Define the name for our CORS policy
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers(); // Enables API controllers
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// *** CORS Configuration - Only the specific policy is defined and used ***
+// *** CORS Configuration - ׳×׳™׳§׳•׳ ׳›׳×׳•׳‘׳× ׳”׳“׳•׳׳™׳™׳ ***
 builder.Services.AddCors(options =>
 {
-    // Define a specific CORS policy for the Netlify frontend
-    // This is the only origin allowed to access with credentials
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          // חשוב: הוספנו כאן את שני הפרוטוקולים (HTTP ו-HTTPS)
-                          // כדי לכסות את כל המקרים שבהם הדפדפן יכול לשלוח בקשה.
-                          // ודא שהדומיין הוא אכן "chocoledelet.netlify.app".
-                          policy.WithOrigins("http://chocoledelet.netlify.app",
-                                              "https://chocoledelet.netlify.app")
+                          // ג… ׳×׳™׳§׳•׳: chocoledet (׳׳ chocoledelet)
+                          // ג… ׳”׳•׳¡׳₪׳× localhost ׳׳₪׳™׳×׳•׳—
+                          policy.WithOrigins("http://chocoledet.netlify.app",
+                                              "https://chocoledet.netlify.app",
+                                              "http://localhost:3000",
+                                              "http://localhost:3001")
                                 .AllowAnyHeader()
                                 .AllowAnyMethod()
-                                .AllowCredentials(); // Allow cookies/authorization headers
+                                .AllowCredentials();
                       });
 });
-// *** End CORS Configuration ***
 
 builder.Services.AddDbContext<ChocoledetContext>(options =>
 {
-    // ודא שמחרוזת ההתחברות "sql" מוגדרת כמשתנה סביבה ב-Render עבור ה-PostgreSQL שלך.
-    // Key: ConnectionStrings__sql
-    // Value: Host=...;Port=...;Database=...;Username=...;Password=...;
     options.UseNpgsql(builder.Configuration.GetConnectionString("sql"));
 });
 
-// *** Dependency Injection Registrations for Repositories and Services ***
-// Register Repositories
+// *** Dependency Injection Registrations ***
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
 builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
 builder.Services.AddScoped<IOrdersItemsRepository, OrdersItemsRepository>();
-// Assuming you also have a ProductsRepository based on your frontend fetching products
 builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
 
-// Register Services (based on common patterns and your previous error for IUsersService)
-// This ensures that your controllers can receive instances of these services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IOrderItemService, OrderItemService>();
-// Assuming you also have a ProductService
 builder.Services.AddScoped<IProductService, ProductService>();
-// *** End Dependency Injection Registrations ***
-
 
 var app = builder.Build();
 
@@ -76,18 +62,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// *** קריטי: UseRouting חייב להיות לפני UseCors ***
-// זה מבטיח שמערכת הניתוב פועלת לפני שמדיניות ה-CORS נאכפת.
+// *** ׳¡׳“׳¨ ׳ ׳›׳•׳: UseRouting ׳׳₪׳ ׳™ UseCors ***
 app.UseRouting();
-// ************************************************
 
-// *** הפעלת מדיניות ה-CORS הספציפית שלנו (לפי שם) ***
-// חשוב: זה חייב להיות אחרי app.UseRouting() ולפני app.UseAuthorization() ו-app.MapControllers()
+// *** ׳”׳₪׳¢׳׳× CORS ***
 app.UseCors(MyAllowSpecificOrigins);
-// *** סיום הפעלת CORS ***
 
 app.UseAuthorization();
-
-app.MapControllers(); // Maps controller routes (e.g., /api/users, /api/products)
+app.MapControllers();
 
 app.Run();
