@@ -1,9 +1,11 @@
 using App.BL.Interfaces; // Added for service interfaces
-using App.BL.Services;   // Added for service implementations
+using App.BL.Services;    // Added for service implementations
 using App.DAL.DataContext;
 using App.DAL.Interfaces; // Added for repository interfaces
 using App.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
+
 
 // Define the name for our CORS policy
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -23,7 +25,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("https://chocoledet.netlify.app") // <-- IMPORTANT: This is the exact domain of your Netlify frontend
+                          // <-- חשוב: ודא שזהו הדומיין המדויק של הפרונטאנד שלך ב-Netlify, כולל HTTP או HTTPS
+                          // בצילום המסך הקודם שלך ראיתי http://chocoledelet.netlify.app,
+                          // אם האתר שלך ב-Netlify עבר ל-HTTPS, אז https:// זה נכון.
+                          // אם הוא עדיין HTTP, שנה ל-http://
+                          policy.WithOrigins("https://chocoledet.netlify.app")
                                 .AllowAnyHeader()
                                 .AllowAnyMethod()
                                 .AllowCredentials(); // Allow cookies/authorization headers
@@ -33,9 +39,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddDbContext<ChocoledetContext>(options =>
 {
-    // Ensure the database connection string comes from environment variables on Render
-    // Render typically defines the database connection as an environment variable named DATABASE_URL
-    options.UseSqlServer(builder.Configuration.GetConnectionString("sql"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("sql"));
 });
 
 // *** Dependency Injection Registrations for Repositories and Services ***
@@ -69,8 +73,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// *** הוסף את השורה הזו כאן! ***
+// חשוב מאוד: UseRouting חייב להיות לפני UseCors
+app.UseRouting();
+// ****************************
+
 // *** Activate our specific CORS policy (by name) ***
-// IMPORTANT: This must be placed before app.UseAuthorization() and app.MapControllers()
+// IMPORTANT: This must be placed after app.UseRouting() and before app.UseAuthorization() and app.MapControllers()
 app.UseCors(MyAllowSpecificOrigins);
 // *** End CORS Activation ***
 
